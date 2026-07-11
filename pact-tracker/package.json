@@ -1,0 +1,12 @@
+{
+  "name": "pact-tracker",
+  "version": "1.0.0",
+  "description": "减肥戒烟约定追踪 - 实时同步版",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

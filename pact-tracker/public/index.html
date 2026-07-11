@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>💕 我们的约定</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFF5F0;
+  --rose: #D4687C;
+  --rose-deep: #B8455A;
+  --rose-light: #F9E0E4;
+  --plum: #4A2C3E;
+  --plum-light: #6B4A5A;
+  --sage: #88B5A0;
+  --sage-deep: #5C8F72;
+  --sage-light: #E0F0E8;
+  --coral: #E8A87C;
+  --card: #FFFBF9;
+  --card-border: #F0E0D8;
+  --text: #3D2C35;
+  --text-muted: #8C7A82;
+  --boba: #C8956C;
+  --boba-light: #F5E6D8;
+  --radius: 20px;
+  --radius-sm: 12px;
+  --shadow: 0 2px 16px rgba(74,44,62,0.06);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 20%, rgba(212,104,124,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, rgba(136,181,160,0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Connection status bar */
+.conn-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  padding: 6px 0;
+  margin-bottom: 4px;
+}
+.conn-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--sage);
+  transition: background 0.3s;
+}
+.conn-dot.offline { background: var(--rose); }
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  padding: 16px 0 12px;
+}
+
+.header-icon {
+  font-size: 44px;
+  margin-bottom: 8px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--plum);
+  letter-spacing: 0.02em;
+}
+
+.header .date {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* ── Equation Card ── */
+.equation-card {
+  background: var(--card);
+  border: 1.5px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 28px 24px 24px;
+  margin: 20px 0 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.equation-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--rose), var(--coral), var(--boba), var(--sage));
+  border-radius: 3px 3px 0 0;
+}
+
+.equation-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.equation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.eq-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.eq-emoji { font-size: 28px; line-height: 1; }
+
+.eq-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+  min-width: 52px;
+}
+.eq-number.pulse { animation: numberPulse 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+@keyframes numberPulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+.eq-number.her { color: var(--rose); }
+.eq-number.him { color: var(--plum); }
+.eq-number.him.warn { color: var(--coral); }
+.eq-number.him.bad { color: var(--rose-deep); }
+
+.eq-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
+
+.eq-arrow {
+  font-size: 1.5rem; color: var(--text-muted); opacity: 0.6;
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+@keyframes arrowPulse {
+  0%, 100% { opacity: 0.4; transform: translateX(0); }
+  50% { opacity: 0.8; transform: translateX(3px); }
+}
+
+.eq-breakdown { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+.eq-rule {
+  display: inline-block; margin-top: 16px;
+  font-size: 0.82rem; color: var(--text-muted); font-weight: 500;
+  padding: 8px 16px; background: var(--rose-light); border-radius: 20px; line-height: 1.5;
+}
+.eq-rule.good { background: var(--sage-light); color: var(--sage-deep); }
+
+/* ── Dual Tracker Panels ── */
+.tracker-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 480px) {
+  .tracker-grid { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--card); border: 1.5px solid var(--card-border);
+  border-radius: var(--radius); padding: 24px 20px;
+  box-shadow: var(--shadow); text-align: center;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.panel.her { border-top: 3px solid var(--rose); }
+.panel.him { border-top: 3px solid var(--plum); }
+
+.panel-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; }
+.panel.her .panel-title { color: var(--rose); }
+.panel.him .panel-title { color: var(--plum); }
+
+.panel-subtitle { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 16px; font-weight: 500; }
+
+/* Updated-by indicator */
+.updated-by {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  height: 16px;
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+.updated-by.visible { opacity: 1; }
+
+.counter-display {
+  font-family: 'Playfair Display', serif; font-size: 3.2rem; font-weight: 800;
+  line-height: 1; margin: 4px 0 2px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.panel.her .counter-display { color: var(--rose); }
+.panel.him .counter-display { color: var(--plum); }
+.counter-unit { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-bottom: 16px; }
+.counter-controls { display: flex; align-items: center; justify-content: center; gap: 16px; }
+
+.btn {
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 2px solid var(--card-border); background: var(--card);
+  font-size: 1.6rem; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: all 0.2s ease; color: var(--text);
+  line-height: 1; font-family: 'Nunito', sans-serif;
+  -webkit-tap-highlight-color: transparent; user-select: none;
+}
+.btn:hover { transform: scale(1.08); box-shadow: var(--shadow); }
+.btn:active { transform: scale(0.94); }
+.btn-plus { border-color: var(--sage); color: var(--sage-deep); }
+.btn-plus:hover { background: var(--sage-light); }
+.btn-minus { border-color: var(--rose-light); color: var(--rose); }
+.btn-minus:hover { background: var(--rose-light); }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ── Boba sub-section ── */
+.boba-section { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--card-border); }
+.boba-header {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 0.8rem; color: var(--boba); font-weight: 700; margin-bottom: 10px;
+}
+.boba-counter-row { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.boba-cups { display: flex; gap: 5px; }
+.boba-cup {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--card-border); transition: all 0.3s ease;
+}
+.boba-cup.filled { background: var(--boba-light); box-shadow: 0 0 0 2px var(--boba); }
+.boba-cup.filled::after { content: '🧋'; font-size: 0.65rem; }
+.boba-note { font-size: 0.7rem; color: var(--text-muted); margin-top: 6px; }
+.boba-note .ready { color: var(--sage-deep); font-weight: 700; }
+
+.btn-sm {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid var(--card-border); background: var(--card);
+  font-size: 1.2rem; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: all 0.2s ease; color: var(--text);
+  line-height: 1; font-family: 'Nunito', sans-serif;
+  -webkit-tap-highlight-color: transparent; user-select: none;
+}
+.btn-sm:hover { transform: scale(1.08); }
+.btn-sm:active { transform: scale(0.92); }
+.btn-sm:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+.btn-boba-plus { border-color: var(--boba); color: var(--boba); }
+.btn-boba-plus:hover { background: var(--boba-light); }
+.btn-boba-minus { border-color: var(--boba-light); color: var(--boba); }
+.btn-boba-minus:hover { background: var(--boba-light); }
+
+/* ── Quota row ── */
+.quota-row { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--card-border); font-size: 0.8rem; color: var(--text-muted); }
+.quota-value { font-weight: 700; color: var(--plum); }
+.quota-value.over { color: var(--rose-deep); }
+
+/* ── Status Message ── */
+.status-msg {
+  text-align: center; padding: 20px 24px; border-radius: var(--radius);
+  margin-bottom: 24px; font-weight: 600; font-size: 0.95rem; transition: all 0.4s ease;
+}
+.status-msg.perfect { background: var(--sage-light); color: var(--sage-deep); }
+.status-msg.okay { background: #FFF3E8; color: var(--coral); }
+.status-msg.warning { background: var(--rose-light); color: var(--rose-deep); }
+
+/* ── History ── */
+.history-section {
+  background: var(--card); border: 1.5px solid var(--card-border);
+  border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow);
+}
+.history-header { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--plum); margin-bottom: 4px; }
+.history-subtitle { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 16px; }
+.history-list { display: flex; flex-direction: column; gap: 8px; }
+.history-day {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  border-radius: var(--radius-sm); background: var(--bg); transition: background 0.2s ease;
+}
+.history-day:hover { background: #FEF0EC; }
+.day-indicator { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.day-indicator.perfect { background: var(--sage); }
+.day-indicator.okay { background: var(--coral); }
+.day-indicator.warning { background: var(--rose-deep); }
+.day-date { font-weight: 700; font-size: 0.9rem; min-width: 82px; color: var(--plum); }
+.day-detail { font-size: 0.82rem; color: var(--text-muted); flex: 1; }
+.day-detail span { font-weight: 700; }
+.day-detail .meals { color: var(--rose); }
+.day-detail .cigs { color: var(--plum); }
+.empty-history { text-align: center; padding: 32px 16px; color: var(--text-muted); font-size: 0.9rem; }
+.empty-history .empty-icon { font-size: 2.5rem; margin-bottom: 8px; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 32px; left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--plum); color: white; padding: 12px 24px; border-radius: 28px;
+  font-weight: 600; font-size: 0.9rem;
+  box-shadow: 0 8px 24px rgba(74,44,62,0.25);
+  z-index: 100; opacity: 0;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Heart particles ── */
+.heart-particle {
+  position: fixed; pointer-events: none; font-size: 1.2rem; z-index: 99;
+  animation: heartUp 1.2s ease-out forwards;
+}
+@keyframes heartUp {
+  0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(-120px) scale(0.3) rotate(20deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eq-arrow, .header-icon { animation: none; }
+  .heart-particle { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="conn-bar">
+    <div class="conn-dot" id="connDot"></div>
+    <span id="connText">已连接</span>
+  </div>
+
+  <header class="header">
+    <div class="header-icon">💕</div>
+    <h1>我们的约定</h1>
+    <p class="date" id="dateDisplay"></p>
+  </header>
+
+  <section class="equation-card">
+    <p class="equation-label">今天的平衡</p>
+    <div class="equation">
+      <div class="eq-block">
+        <span class="eq-emoji">🍽️</span>
+        <span class="eq-number her" id="eqMeals">0</span>
+        <span class="eq-label">有效顿数</span>
+      </div>
+      <span class="eq-arrow">→</span>
+      <div class="eq-block">
+        <span class="eq-emoji">🚬</span>
+        <span class="eq-number him" id="eqQuota">0</span>
+        <span class="eq-label">你的配额</span>
+      </div>
+    </div>
+    <div class="eq-breakdown" id="eqBreakdown"></div>
+    <span class="eq-rule" id="eqRule">加载中…</span>
+  </section>
+
+  <div class="tracker-grid">
+    <div class="panel her">
+      <div class="panel-title">她的记录</div>
+      <div class="panel-subtitle">今天就靠这个监督啦</div>
+      <div class="updated-by" id="herUpdatedBy"></div>
+      <div class="counter-display" id="herCount">0</div>
+      <div class="counter-unit">顿（正餐）</div>
+      <div class="counter-controls">
+        <button class="btn btn-minus" id="herMinus" disabled>−</button>
+        <button class="btn btn-plus" id="herPlus">+</button>
+      </div>
+
+      <div class="boba-section">
+        <div class="boba-header"><span>🧋</span> 奶茶记录</div>
+        <div class="boba-counter-row">
+          <button class="btn-sm btn-boba-minus" id="bobaMinus" disabled>−</button>
+          <div class="boba-cups" id="bobaCups">
+            <div class="boba-cup"></div>
+            <div class="boba-cup"></div>
+            <div class="boba-cup"></div>
+            <div class="boba-cup"></div>
+          </div>
+          <button class="btn-sm btn-boba-plus" id="bobaPlus">+</button>
+        </div>
+        <div class="boba-note" id="bobaNote">累积 0 杯 · 每 4 杯 = 1 顿</div>
+      </div>
+    </div>
+
+    <div class="panel him">
+      <div class="panel-title">他的记录</div>
+      <div class="panel-subtitle">今天抽了几根？</div>
+      <div class="updated-by" id="hisUpdatedBy"></div>
+      <div class="counter-display" id="hisCount">0</div>
+      <div class="counter-unit">根</div>
+      <div class="counter-controls">
+        <button class="btn btn-minus" id="hisMinus" disabled>−</button>
+        <button class="btn btn-plus" id="hisPlus">+</button>
+      </div>
+      <div class="quota-row" id="quotaRow">
+        今日配额：<span class="quota-value" id="quotaValue">0 根</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-msg" id="statusMsg">加载中…</div>
+
+  <section class="history-section">
+    <h2 class="history-header">历史记录</h2>
+    <p class="history-subtitle">过去 14 天的打卡情况</p>
+    <div class="history-list" id="historyList">
+      <div class="empty-history">
+        <div class="empty-icon">📋</div>
+        加载中…
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+  const $ = id => document.getElementById(id);
+
+  // DOM refs
+  const connDot = $('connDot');
+  const connText = $('connText');
+  const dateDisplay = $('dateDisplay');
+  const eqMeals = $('eqMeals');
+  const eqQuota = $('eqQuota');
+  const eqBreakdown = $('eqBreakdown');
+  const eqRule = $('eqRule');
+  const herCount = $('herCount');
+  const hisCount = $('hisCount');
+  const herUpdatedBy = $('herUpdatedBy');
+  const hisUpdatedBy = $('hisUpdatedBy');
+  const herMinus = $('herMinus');
+  const herPlus = $('herPlus');
+  const bobaMinus = $('bobaMinus');
+  const bobaPlus = $('bobaPlus');
+  const bobaCups = $('bobaCups');
+  const bobaNote = $('bobaNote');
+  const hisMinus = $('hisMinus');
+  const hisPlus = $('hisPlus');
+  const quotaValue = $('quotaValue');
+  const quotaRow = $('quotaRow');
+  const statusMsg = $('statusMsg');
+  const historyList = $('historyList');
+  const toast = $('toast');
+
+  // ── State (synced from server) ──
+  let today = getTodayStr();
+  let totalBoba = 0;
+  let allHistory = {};       // { date: { meals, bobaAdded, cigarettes } }
+  let lastUpdateSource = ''; // 'me' or 'remote'
+
+  function getTodayStr() {
+    const d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+
+  function getDateLabel(dateStr) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const date = new Date(y, m - 1, d);
+    const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+    return `${m}月${d}日 周${weekdays[date.getDay()]}`;
+  }
+
+  function todayData() {
+    return allHistory[today] || { meals: 0, bobaAdded: 0, cigarettes: 0 };
+  }
+
+  function effectiveMeals() {
+    const td = todayData();
+    return td.meals + Math.floor(totalBoba / 4);
+  }
+
+  function bobaRemainder() { return totalBoba % 4; }
+  function bobaToNext() { const r = bobaRemainder(); return r === 0 ? 0 : 4 - r; }
+
+  function calcQuota() {
+    const eff = effectiveMeals();
+    if (eff <= 2) return 0;
+    if (eff === 3) return 1;
+    return eff;
+  }
+
+  function getStatusClass() {
+    const eff = effectiveMeals();
+    const cigs = todayData().cigarettes;
+    if (eff <= 2 && cigs === 0) return 'perfect';
+    if (eff <= 3 && cigs <= 1) return 'okay';
+    return 'warning';
+  }
+
+  // ── API ──
+  async function fetchState() {
+    const res = await fetch('/api/state');
+    return res.json();
+  }
+
+  async function pushUpdate(payload) {
+    const res = await fetch('/api/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    return res.json();
+  }
+
+  // ── SSE connection ──
+  function connectSSE() {
+    const es = new EventSource('/api/sse');
+    es.onopen = () => {
+      setOnline(true);
+    };
+    es.addEventListener('update', (e) => {
+      const payload = JSON.parse(e.data);
+      applyRemoteUpdate(payload);
+    });
+    es.onerror = () => {
+      setOnline(false);
+      es.close();
+      setTimeout(connectSSE, 3000);
+    };
+  }
+
+  function setOnline(online) {
+    if (online) {
+      connDot.classList.remove('offline');
+      connText.textContent = '已连接';
+    } else {
+      connDot.classList.add('offline');
+      connText.textContent = '连接已断开，重连中…';
+    }
+  }
+
+  function applyRemoteUpdate(payload) {
+    lastUpdateSource = 'remote';
+    if (!allHistory[payload.date]) allHistory[payload.date] = {};
+    allHistory[payload.date].meals = payload.meals;
+    allHistory[payload.date].bobaAdded = payload.bobaAdded;
+    allHistory[payload.date].cigarettes = payload.cigarettes;
+    totalBoba = payload.totalBoba;
+
+    // Highlight the changed panel
+    const td = todayData();
+    herUpdatedBy.textContent = `女方更新 ${new Date().toLocaleTimeString('zh-CN', {hour:'2-digit',minute:'2-digit'})}`;
+    herUpdatedBy.classList.add('visible');
+    hisUpdatedBy.classList.add('visible');
+    hisUpdatedBy.textContent = herUpdatedBy.textContent;
+    setTimeout(() => {
+      herUpdatedBy.classList.remove('visible');
+      hisUpdatedBy.classList.remove('visible');
+    }, 3000);
+
+    renderAll();
+    lastUpdateSource = '';
+  }
+
+  // ── Render ──
+  function animateNumber(el, value) {
+    const old = parseInt(el.textContent) || 0;
+    if (old !== value) {
+      el.textContent = value;
+      el.classList.remove('pulse');
+      void el.offsetWidth;
+      el.classList.add('pulse');
+    }
+  }
+
+  function renderBobaCups() {
+    const rem = bobaRemainder();
+    const cups = bobaCups.children;
+    for (let i = 0; i < 4; i++) cups[i].classList.toggle('filled', i < rem);
+
+    const mealsFromBoba = Math.floor(totalBoba / 4);
+    const next = bobaToNext();
+    const td = todayData();
+
+    if (totalBoba === 0) {
+      bobaNote.innerHTML = '累积 0 杯 · 每 4 杯 = 1 顿';
+    } else if (next === 0) {
+      bobaNote.innerHTML = `累计 <span class="ready">${totalBoba}</span> 杯，已折算 <span class="ready">${mealsFromBoba}</span> 顿 · 今天新增 ${td.bobaAdded} 杯`;
+    } else {
+      bobaNote.innerHTML = `累计 <span class="ready">${totalBoba}</span> 杯（已折 ${mealsFromBoba} 顿）· 还差 <span class="ready">${next}</span> 杯凑满`;
+    }
+  }
+
+  function renderAll() {
+    const eff = effectiveMeals();
+    const quota = calcQuota();
+    const td = todayData();
+    const mealsFromBoba = Math.floor(totalBoba / 4);
+    const rem = bobaRemainder();
+
+    dateDisplay.textContent = getDateLabel(today);
+
+    animateNumber(eqMeals, eff);
+    animateNumber(eqQuota, quota);
+
+    eqQuota.classList.remove('warn', 'bad');
+    if (quota >= 4) eqQuota.classList.add('bad');
+    else if (quota >= 1) eqQuota.classList.add('warn');
+
+    if (totalBoba > 0) {
+      let parts = [];
+      if (td.meals > 0) parts.push(`正餐 ${td.meals} 顿`);
+      if (mealsFromBoba > 0) parts.push(`奶茶累计折 ${mealsFromBoba} 顿`);
+      if (rem > 0) parts.push(`奶茶余 ${rem}/4 杯`);
+      eqBreakdown.innerHTML = parts.join(' + ');
+    } else {
+      eqBreakdown.innerHTML = '';
+    }
+
+    if (eff <= 2) {
+      eqRule.textContent = '有效 ≤2 顿 → 你抽 0 根 · 今天是最棒的一天！';
+      eqRule.className = 'eq-rule good';
+    } else if (eff === 3) {
+      eqRule.textContent = '有效 3 顿 → 你抽 1 根 · 还行，明天加油呀';
+      eqRule.className = 'eq-rule';
+    } else {
+      eqRule.textContent = `有效 ${eff} 顿 → 你抽 ${quota} 根 · 明天的约定要更努力哦`;
+      eqRule.className = 'eq-rule';
+    }
+
+    herCount.textContent = td.meals;
+    herMinus.disabled = td.meals <= 0;
+    bobaMinus.disabled = td.bobaAdded <= 0;
+    hisCount.textContent = td.cigarettes;
+    hisMinus.disabled = td.cigarettes <= 0;
+
+    quotaValue.textContent = quota + ' 根';
+    quotaValue.classList.toggle('over', td.cigarettes > quota);
+    quotaRow.style.display = quota === 0 ? 'none' : '';
+
+    const cls = getStatusClass();
+    statusMsg.className = 'status-msg ' + cls;
+    if (cls === 'perfect') {
+      statusMsg.innerHTML = '🎉 完美的一天！有效 ' + eff + ' 顿，你一根烟都没抽，你们太棒了！';
+    } else if (cls === 'okay') {
+      statusMsg.innerHTML = '😊 还不错的一天，明天可以更进一步！';
+    } else {
+      if (td.cigarettes > quota) {
+        statusMsg.innerHTML = '😤 今天抽烟超标了… 明天重新开始，说到做到！';
+      } else if (eff > 3) {
+        statusMsg.innerHTML = '💪 有效 ' + eff + ' 顿，她也吃多了你也辛苦了，明天加油！';
+      } else {
+        statusMsg.innerHTML = '📝 继续记录吧，目标是完美的 0-0 日！';
+      }
+    }
+
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const entries = Object.entries(allHistory)
+      .filter(([date]) => date !== today)
+      .sort((a, b) => a[0].localeCompare(b[0]));
+
+    // Running cumulative boba
+    let running = 0;
+    const cumBoba = {};
+    entries.forEach(([date, d]) => {
+      running += (d.bobaAdded || 0);
+      cumBoba[date] = running;
+    });
+
+    const display = entries.reverse().slice(0, 14);
+
+    if (display.length === 0) {
+      historyList.innerHTML = '<div class="empty-history"><div class="empty-icon">📋</div>还没有记录，从今天开始打卡吧！</div>';
+      return;
+    }
+
+    historyList.innerHTML = display.map(([date, d]) => {
+      const meals = d.meals || 0;
+      const bobaAdded = d.bobaAdded || 0;
+      const dayCumBoba = cumBoba[date] || 0;
+      const eff = meals + Math.floor(dayCumBoba / 4);
+      const cigs = d.cigarettes || 0;
+      const quota = (eff <= 2) ? 0 : (eff === 3) ? 1 : eff;
+      const cls = cigs <= quota ? (eff <= 2 && cigs === 0 ? 'perfect' : 'okay') : 'warning';
+
+      let html = `🍽️ <span class="meals">${eff} 顿</span>`;
+      if (dayCumBoba > 0) {
+        html += ` <span style="font-size:0.7rem;color:var(--boba)">(${meals}+${Math.floor(dayCumBoba / 4)}奶茶)</span>`;
+      }
+      if (bobaAdded > 0) {
+        html += ` <span style="font-size:0.65rem;color:var(--boba)">+${bobaAdded}🧋</span>`;
+      }
+      html += ` &nbsp;·&nbsp; 🚬 <span class="cigs">${cigs} 根</span>`;
+      html += ` <span style="color:var(--text-muted);font-size:0.75rem">（配额 ${quota}）</span>`;
+
+      return `<div class="history-day">
+        <div class="day-indicator ${cls}"></div>
+        <span class="day-date">${getDateLabel(date)}</span>
+        <span class="day-detail">${html}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Toast ──
+  let toastTimer;
+  function showToast(msg) {
+    clearTimeout(toastTimer);
+    toast.textContent = msg;
+    toast.classList.add('show');
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  // ── Heart particles ──
+  function spawnHearts(x, y, count) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const hearts = ['💕', '💖', '✨', '💗', '🌟'];
+    for (let i = 0; i < count; i++) {
+      const h = document.createElement('span');
+      h.className = 'heart-particle';
+      h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+      h.style.left = (x + (Math.random() - 0.5) * 60) + 'px';
+      h.style.top = (y + (Math.random() - 0.5) * 20) + 'px';
+      h.style.animationDuration = (1 + Math.random() * 0.8) + 's';
+      h.style.animationDelay = Math.random() * 0.2 + 's';
+      document.body.appendChild(h);
+      h.addEventListener('animationend', () => h.remove());
+    }
+  }
+
+  // ── Actions ──
+  async function doUpdate(payload) {
+    if (lastUpdateSource === 'remote') return; // debounce
+    lastUpdateSource = 'me';
+    try {
+      await pushUpdate(payload);
+    } catch (err) {
+      showToast('保存失败，请检查网络');
+    }
+    lastUpdateSource = '';
+  }
+
+  function changeMeals(delta) {
+    const td = todayData();
+    const val = td.meals + delta;
+    if (val < 0) return;
+    allHistory[today] = { ...td, meals: val };
+    renderAll();
+    doUpdate({ date: today, meals: val, totalBoba });
+    if (delta > 0 && effectiveMeals() > 3) {
+      showToast('她又多吃了一顿… 配额也增加了 😅');
+    }
+  }
+
+  function changeBoba(delta) {
+    const td = todayData();
+    const beforeTotal = totalBoba;
+    const beforeFull = Math.floor(beforeTotal / 4);
+
+    if (delta > 0) {
+      totalBoba += 1;
+      allHistory[today] = { ...td, bobaAdded: td.bobaAdded + 1 };
+      const afterFull = Math.floor(totalBoba / 4);
+      renderAll();
+      doUpdate({
+        date: today,
+        meals: td.meals,
+        bobaAdded: allHistory[today].bobaAdded,
+        cigarettes: td.cigarettes,
+        totalBoba
+      });
+
+      if (afterFull > beforeFull) {
+        showToast('🧋 累计满 4 杯，今天配额 +1！总计折 ' + afterFull + ' 顿了');
+      } else {
+        showToast(`🧋 累计 ${totalBoba} 杯，还差 ${bobaToNext()} 杯凑满下一顿`);
+      }
+    } else {
+      if (td.bobaAdded <= 0) return;
+      totalBoba -= 1;
+      allHistory[today] = { ...td, bobaAdded: td.bobaAdded - 1 };
+      renderAll();
+      doUpdate({
+        date: today,
+        meals: td.meals,
+        bobaAdded: allHistory[today].bobaAdded,
+        cigarettes: td.cigarettes,
+        totalBoba
+      });
+    }
+  }
+
+  function changeCigarettes(delta) {
+    const td = todayData();
+    const val = td.cigarettes + delta;
+    if (val < 0) return;
+    allHistory[today] = { ...td, cigarettes: val };
+    const quota = calcQuota();
+    renderAll();
+    doUpdate({ date: today, cigarettes: val, totalBoba });
+    if (val === 0 && effectiveMeals() <= 2) {
+      const rect = hisCount.getBoundingClientRect();
+      spawnHearts(rect.left + rect.width / 2, rect.top, 5);
+      showToast('一根都没抽！说到做到 💕');
+    } else if (val > quota && delta > 0) {
+      showToast('超过今天配额了… 明天注意哦');
+    }
+  }
+
+  herPlus.addEventListener('click', () => changeMeals(1));
+  herMinus.addEventListener('click', () => changeMeals(-1));
+  bobaPlus.addEventListener('click', () => changeBoba(1));
+  bobaMinus.addEventListener('click', () => changeBoba(-1));
+  hisPlus.addEventListener('click', () => changeCigarettes(1));
+  hisMinus.addEventListener('click', () => changeCigarettes(-1));
+
+  // ── Init ──
+  async function init() {
+    today = getTodayStr();
+    try {
+      const state = await fetchState();
+      totalBoba = state.totalBoba || 0;
+      allHistory = state.history || {};
+    } catch (err) {
+      showToast('无法加载数据，请刷新重试');
+    }
+    renderAll();
+    connectSSE();
+  }
+
+  // Day-change check every 30s
+  setInterval(() => {
+    const newToday = getTodayStr();
+    if (newToday !== today) {
+      today = newToday;
+      // New day: meals/cigs reset but totalBoba carries over
+      allHistory[today] = allHistory[today] || { meals: 0, bobaAdded: 0, cigarettes: 0 };
+      renderAll();
+      doUpdate({ date: today, meals: 0, bobaAdded: 0, cigarettes: 0, totalBoba });
+    }
+  }, 30000);
+
+  init();
+})();
+</script>
+</body>
+</html>
